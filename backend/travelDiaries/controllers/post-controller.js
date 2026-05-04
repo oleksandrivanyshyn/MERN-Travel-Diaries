@@ -55,3 +55,69 @@ export const addPost = async (req, res) => {
   }
   return res.status(201).json({ post });
 };
+
+export const getPostById = async (req, res) => {
+  const id = req.params.id;
+
+  let post;
+
+  try {
+    post = await Post.findById(id);
+  } catch (err) {
+    return console.log(err);
+  }
+  if (!post) {
+    return res.status(404).json({ message: 'No post found' });
+  }
+  return res.status(200).json({ post });
+};
+
+export const updatePost = async (req, res) => {
+  const id = req.params.id;
+  const { title, description, location, image } = req.body;
+
+  if (
+    !title ||
+    title.trim() === '' ||
+    !description ||
+    description.trim() === '' ||
+    !location ||
+    location.trim() === '' ||
+    !image ||
+    image.trim() === ''
+  ) {
+    return res.status(422).json({ message: 'Invalid Data' });
+  }
+
+  let post;
+  try {
+    post = await Post.findByIdAndUpdate(id, {
+      title,
+      description,
+      image,
+      location,
+    });
+  } catch (err) {
+    return console.log(err);
+  }
+
+  if (!post) {
+    return res.status(500).json({ message: 'Unable to update' });
+  }
+  return res.status(200).json({ message: 'Updated Successfully' });
+};
+
+export const deletePost = async (req, res) => {
+  const id = req.params.id;
+  let post;
+  try {
+    post = await Post.findByIdAndRemove(id);
+  } catch (err) {
+    return console.log(err);
+  }
+  if (!post) {
+    return res.status(500).json({ message: 'Unable to delete' });
+  }
+
+  return res.status(200).json({ message: 'Deleted Successfully' });
+};
