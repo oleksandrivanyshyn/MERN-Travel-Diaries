@@ -1,4 +1,5 @@
 import User from '../models/User';
+import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async (req, res) => {
   let users;
@@ -11,4 +12,32 @@ export const getAllUsers = async (req, res) => {
   if (!users) return res.status(404).json({ message: 'No users found' });
 
   return res.status(200).json({ users });
+};
+
+export const signUp = async (req, res) => {
+  const { name, email, password } = req.body;
+  if (
+    !name ||
+    name.trim() === '' ||
+    !email ||
+    !email.includes('@') ||
+    !password ||
+    password.length < 6
+  ) {
+    return res
+      .status(422)
+      .json({ message: 'Invalid inputs passed, please check your data.' });
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({ name, email, password: hashedPassword });
+  try {
+    await user.save();
+  } catch (error) {
+    console.error('Error saving user:', error);
+    res.status(500).json({ message: 'Error saving user', error });
+  }
+  if (!user)
+    return res.status(500).json({ message: 'Unexpected error occurred' });
+  return res.status(201).json({ user });
 };
