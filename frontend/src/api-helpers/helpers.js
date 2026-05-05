@@ -1,7 +1,18 @@
 import axios from 'axios';
 
 export const getAllPosts = async () => {
-  const res = await axios.get('http://localhost:5000/posts');
+  const res = await axios.get('/posts');
   if (res.status !== 200) throw new Error('Failed to fetch posts');
+  return res.data;
+};
+
+export const sendAuthRequest = async (signup, data) => {
+  const res = await axios
+    .post(`/users/${signup ? 'signup' : 'login'}`, {
+      ...data,
+    })
+    .catch((err) => console.log(err));
+  if (res.status !== 200 && res.status !== 201)
+    throw new Error('Authentication failed');
   return res.data;
 };
