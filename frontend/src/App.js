@@ -1,8 +1,11 @@
-function App() {
+import Header from './header/Header';
 
+function App() {
   return (
     <div>
-      Hello world
+      <header>
+        <Header></Header>
+      </header>
     </div>
   );
 }
