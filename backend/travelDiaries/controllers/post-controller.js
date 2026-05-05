@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import Post from '../models/Post';
 import User from '../models/User';
 
@@ -7,6 +6,7 @@ export const getAllPosts = async (req, res) => {
   try {
     posts = await Post.find().populate('user');
   } catch (err) {
+    console.log('Error fetching posts:', err);
     return res.status(500).json({ message: 'Fetching posts failed' });
   }
 
@@ -39,6 +39,7 @@ export const addPost = async (req, res) => {
   try {
     existingUser = await User.findById(user);
   } catch (err) {
+    console.log('Error checking user:', err);
     return res.status(500).json({ message: 'Checking user failed' });
   }
 
@@ -56,13 +57,11 @@ export const addPost = async (req, res) => {
   });
 
   try {
-    const session = await mongoose.startSession();
-    session.startTransaction();
     existingUser.posts.push(post);
-    await existingUser.save({ session });
-    await post.save({ session });
-    await session.commitTransaction();
+    await existingUser.save();
+    await post.save();
   } catch (err) {
+    console.log('Mongo Error on addPost:', err);
     return res.status(500).json({ message: 'Creating post failed' });
   }
 
@@ -76,6 +75,7 @@ export const getPostById = async (req, res) => {
   try {
     post = await Post.findById(id);
   } catch (err) {
+    console.log('Error fetching post by ID:', err);
     return res.status(500).json({ message: 'Fetching post failed' });
   }
 
@@ -116,6 +116,7 @@ export const updatePost = async (req, res) => {
       { new: true },
     );
   } catch (err) {
+    console.log('Mongo Error on updatePost:', err);
     return res.status(500).json({ message: 'Updating failed' });
   }
 
@@ -131,20 +132,17 @@ export const deletePost = async (req, res) => {
   let post;
 
   try {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    post = await Post.findById(id).populate('user').session(session);
+    post = await Post.findById(id).populate('user');
 
     if (!post) {
-      await session.abortTransaction();
       return res.status(404).json({ message: 'Post not found' });
     }
 
     post.user.posts.pull(post);
-    await post.user.save({ session });
-    await Post.findByIdAndDelete(id).session(session);
-    await session.commitTransaction();
+    await post.user.save();
+    await Post.findByIdAndDelete(id);
   } catch (err) {
+    console.log('Mongo Error on deletePost:', err);
     return res.status(500).json({ message: 'Deleting failed' });
   }
 

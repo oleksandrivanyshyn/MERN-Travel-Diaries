@@ -1,8 +1,14 @@
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect } from 'react';
 import DiaryItem from './DiaryItem';
+import { getAllPosts } from '../api-helpers/helpers';
 
 const Diaries = () => {
+  useEffect(() => {
+    getAllPosts()
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <Box
       display="flex"
