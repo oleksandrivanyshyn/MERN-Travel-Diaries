@@ -1,7 +1,6 @@
 import {
   Avatar,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   IconButton,
@@ -9,9 +8,7 @@ import {
 } from '@mui/material';
 import { Box } from '@mui/system';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
-import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import React, { useState } from 'react';
+import React from 'react';
 
 const DiaryItem = ({
   title,
@@ -23,7 +20,6 @@ const DiaryItem = ({
   user,
   name,
 }) => {
-  const [open, setOpen] = useState(false);
   return (
     <Card
       sx={{
@@ -72,14 +68,6 @@ const DiaryItem = ({
           </Typography>
         </Box>
       </CardContent>
-      <CardActions sx={{ marginLeft: 'auto' }}>
-        <IconButton color="warning">
-          <ModeEditOutlineIcon />
-        </IconButton>
-        <IconButton color="error">
-          <DeleteForeverIcon />
-        </IconButton>
-      </CardActions>
     </Card>
   );
 };
