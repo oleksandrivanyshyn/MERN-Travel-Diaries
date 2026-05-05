@@ -3,22 +3,27 @@ import { Box, Button, FormLabel, TextField, Typography } from '@mui/material';
 import { sendAuthRequest } from '../api-helpers/helpers';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store';
+import { useNavigate } from 'react-router-dom';
 const Auth = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSignup, setIsSignup] = useState(true);
+  const onResReceived = (data) => {
+    localStorage.setItem('userId', data.user._id);
+    dispatch(authActions.login());
+    navigate('/diaries');
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(inputs);
 
     if (isSignup) {
       sendAuthRequest(true, inputs)
-        .then((data) => console.log(data))
-        .then(() => dispatch(authActions.login()))
+        .then(onResReceived)
         .catch((err) => console.log(err));
     } else {
       sendAuthRequest(false, inputs)
-        .then((data) => console.log(data))
-        .then(() => dispatch(authActions.login()))
+        .then(onResReceived)
         .catch((err) => console.log(err));
     }
   };

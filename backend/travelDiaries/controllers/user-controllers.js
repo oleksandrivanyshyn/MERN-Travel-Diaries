@@ -42,15 +42,8 @@ export const signUp = async (req, res) => {
   return res.status(201).json({ user });
 };
 export const login = async (req, res) => {
-  const { name, email, password } = req.body;
-  if (
-    !name ||
-    name.trim() === '' ||
-    !email ||
-    !email.includes('@') ||
-    !password ||
-    password.length < 6
-  ) {
+  const { email, password } = req.body;
+  if (!email || !email.includes('@') || !password || password.length < 6) {
     return res
       .status(422)
       .json({ message: 'Invalid inputs passed, please check your data.' });
