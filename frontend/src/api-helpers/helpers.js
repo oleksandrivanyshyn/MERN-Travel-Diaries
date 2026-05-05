@@ -71,3 +71,14 @@ export const postDelete = async (id) => {
 
   return res.data;
 };
+
+export const getUserDetails = async () => {
+  const id = localStorage.getItem('userId');
+  const res = await axios.get(`/users/${id}`).catch((err) => console.log(err));
+
+  if (res.status !== 200) {
+    return console.log('No user found');
+  }
+
+  return res.data;
+};
