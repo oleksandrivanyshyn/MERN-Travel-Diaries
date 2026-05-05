@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Box, Button, FormLabel, TextField, Typography } from '@mui/material';
 import { sendAuthRequest } from '../api-helpers/helpers';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store';
 const Auth = () => {
+  const dispatch = useDispatch();
   const [isSignup, setIsSignup] = useState(true);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,10 +13,12 @@ const Auth = () => {
     if (isSignup) {
       sendAuthRequest(true, inputs)
         .then((data) => console.log(data))
+        .then(() => dispatch(authActions.login()))
         .catch((err) => console.log(err));
     } else {
       sendAuthRequest(false, inputs)
         .then((data) => console.log(data))
+        .then(() => dispatch(authActions.login()))
         .catch((err) => console.log(err));
     }
   };
