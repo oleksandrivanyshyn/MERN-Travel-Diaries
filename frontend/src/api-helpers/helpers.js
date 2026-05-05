@@ -16,3 +16,21 @@ export const sendAuthRequest = async (signup, data) => {
     throw new Error('Authentication failed');
   return res.data;
 };
+export const addPost = async (data) => {
+  const res = await axios
+    .post('/posts/', {
+      title: data.title,
+      description: data.description,
+      location: data.location,
+      image: data.imageUrl,
+      date: data.date,
+      user: localStorage.getItem('userId'),
+    })
+    .catch((err) => console.log(err));
+
+  if (res.status !== 201) {
+    return console.log('Error Occurred');
+  }
+
+  return res.data;
+};

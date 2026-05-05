@@ -1,14 +1,16 @@
-import { Box, Button, FormLabel, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, FormLabel, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import { addPost } from "../api-helpers/helpers";
+import { useNavigate } from "react-router-dom";
 const Add = () => {
+  const navigate = useNavigate();
   const [inputs, setInputs] = useState({
-    title: '',
-    description: '',
-    location: '',
-    imageUrl: '',
-    date: '',
+    title: "",
+    description: "",
+    location: "",
+    imageUrl: "",
+    date: "",
   });
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -16,22 +18,29 @@ const Add = () => {
       [e.target.name]: e.target.value,
     }));
   };
+  const onResReceived = (data) => {
+    console.log(data);
+    navigate("/diaries");
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(inputs);
+    addPost(inputs)
+      .then(onResReceived)
+      .catch((err) => console.log(err));
   };
   return (
-    <Box display="flex" flexDirection={'column'} width="100%" height="100%">
+    <Box display="flex" flexDirection={"column"} width="100%" height="100%">
       <Box display="flex" margin="auto" padding={2}>
         <Typography
-          fontWeight={'bold'}
+          fontWeight={"bold"}
           variant="h4"
-          fontFamily={'dancing script'}
+          fontFamily={"dancing script"}
         >
           Add Your Travel Diary
         </Typography>
         <TravelExploreIcon
-          sx={{ fontSize: '40px', paddingLeft: 1, color: 'lightcoral  ' }}
+          sx={{ fontSize: "40px", paddingLeft: 1, color: "lightcoral  " }}
         />
       </Box>
       <form onSubmit={handleSubmit}>
@@ -40,9 +49,9 @@ const Add = () => {
           display="flex"
           width="80%"
           margin="auto"
-          flexDirection={'column'}
+          flexDirection={"column"}
         >
-          <FormLabel sx={{ fontFamily: 'quicksand' }}>Title</FormLabel>
+          <FormLabel sx={{ fontFamily: "quicksand" }}>Title</FormLabel>
           <TextField
             onChange={handleChange}
             name="title"
@@ -50,7 +59,7 @@ const Add = () => {
             variant="standard"
             margin="normal"
           />
-          <FormLabel sx={{ fontFamily: 'quicksand' }}>Description</FormLabel>
+          <FormLabel sx={{ fontFamily: "quicksand" }}>Description</FormLabel>
           <TextField
             onChange={handleChange}
             name="description"
@@ -58,7 +67,7 @@ const Add = () => {
             variant="standard"
             margin="normal"
           />
-          <FormLabel sx={{ fontFamily: 'quicksand' }}>Image URL</FormLabel>
+          <FormLabel sx={{ fontFamily: "quicksand" }}>Image URL</FormLabel>
           <TextField
             onChange={handleChange}
             name="imageUrl"
@@ -67,7 +76,7 @@ const Add = () => {
             margin="normal"
           />
 
-          <FormLabel sx={{ fontFamily: 'quicksand' }}>Location</FormLabel>
+          <FormLabel sx={{ fontFamily: "quicksand" }}>Location</FormLabel>
           <TextField
             onChange={handleChange}
             name="location"
@@ -75,7 +84,7 @@ const Add = () => {
             variant="standard"
             margin="normal"
           />
-          <FormLabel sx={{ fontFamily: 'quicksand' }}>Date</FormLabel>
+          <FormLabel sx={{ fontFamily: "quicksand" }}>Date</FormLabel>
           <TextField
             type="date"
             onChange={handleChange}
@@ -87,7 +96,7 @@ const Add = () => {
           <Button
             type="submit"
             color="warning"
-            sx={{ width: '50%', margin: 'auto', mt: 2, borderRadius: 7 }}
+            sx={{ width: "50%", margin: "auto", mt: 2, borderRadius: 7 }}
             variant="contained"
           >
             Post
